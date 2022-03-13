@@ -21,3 +21,9 @@ export interface ChooseCard extends BaseCard {
 }
 
 export type Card = ChooseCard | SideCard | EssayCard;
+
+export interface GroupCard {
+  title: string;
+  description?: string;
+  cards: Card[];
+}

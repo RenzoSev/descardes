@@ -1,4 +1,4 @@
-function withoutPropagation(
+function withoutParentsActionPropagation(
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   onClick?: (...rest: any) => void
 ) {
@@ -7,4 +7,4 @@ function withoutPropagation(
   onClick(e);
 }
 
-export default withoutPropagation;
+export default withoutParentsActionPropagation;

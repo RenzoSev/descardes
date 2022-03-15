@@ -1,6 +1,6 @@
 import { HTMLAttributes } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
-import withoutPropagation from '../../utils/withoutPropagation';
+import withoutParentsActionPropagation from '../../utils/withoutParentsActionPropagation';
 
 interface GridButton extends HTMLAttributes<HTMLButtonElement> {
   type: 'delete' | 'edit';
@@ -23,7 +23,7 @@ const GridButton: React.FC<GridButton> = ({ type, onClick, ...rest }) => {
     <button
       {...rest}
       className={`relative right-8 z-50 text-lg text-${colorByType}-700`}
-      onClick={(e) => withoutPropagation(e, onClick)}
+      onClick={(e) => withoutParentsActionPropagation(e, onClick)}
     >
       <IconByType />
     </button>

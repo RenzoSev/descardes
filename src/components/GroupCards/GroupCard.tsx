@@ -9,6 +9,8 @@ import {
 } from 'react-icons/ai';
 import Modal, { ModalHandles } from '../Modal';
 import useGroupCardsManager from '../../hooks/useGroupCardsManager';
+import { useNavigate } from 'react-router-dom';
+import Grid from '../Grid';
 
 const GroupCard: React.FC<GroupCardTypes> = ({
   title,
@@ -26,6 +28,11 @@ const GroupCard: React.FC<GroupCardTypes> = ({
     setDescription,
   } = useGroupCardsManager();
   const modalRef = useRef<ModalHandles>(null);
+  const navigate = useNavigate();
+
+  const handleNavigateToGroupCardPage = useCallback(() => {
+    navigate(`/${id}`);
+  }, []);
 
   function handleRemoveGroupCard() {
     const cleanedGroupCards = groupCards.filter(
@@ -122,36 +129,22 @@ const GroupCard: React.FC<GroupCardTypes> = ({
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg bg-zinc-50 p-4 shadow">
-      <div className="absolute right-0 flex flex-col gap-3">
-        <button
-          onClick={handleRemoveGroupCard}
-          className="relative right-8 text-lg text-red-700"
-        >
-          <AiFillDelete />
-        </button>
+    <Grid.Container onClick={handleNavigateToGroupCardPage}>
+      <Grid.ContainerButton>
+        <Grid.Button onClick={handleRemoveGroupCard} type="delete" />
 
-        <button
-          onClick={handleToggleEditGroupCard}
-          className="relative right-8 text-lg text-blue-700"
-        >
-          <AiFillEdit />
-        </button>
-      </div>
+        <Grid.Button onClick={handleToggleEditGroupCard} type="edit" />
+      </Grid.ContainerButton>
 
-      <div>
-        <h3 className="text-xl font-bold text-slate-700">{title}</h3>
-        {description && (
-          <h4 className="text-normal text-slate-700">{description}</h4>
-        )}
-      </div>
+      <Grid.ContainerDescription>
+        <Grid.Title title={title} />
+        {description && <Grid.Description description={description} />}
+      </Grid.ContainerDescription>
 
-      <p className="text-sm text-slate-700/50">
-        Quantidade de cards: {cards.length}
-      </p>
+      <Grid.Details details={`Quantidade de cards: ${cards.length}`} />
 
       {renderModalEditGroupCard()}
-    </div>
+    </Grid.Container>
   );
 };
 

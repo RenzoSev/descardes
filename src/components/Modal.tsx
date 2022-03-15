@@ -6,6 +6,7 @@ export interface ModalHandles {
 
 interface ModalProps {
   initialStatus?: boolean;
+  children: any; // TODO: it must not be resolved with any type. fix this type bug when pass a children to Modal
 }
 
 const Modal: React.ForwardRefRenderFunction<ModalHandles, ModalProps> = (

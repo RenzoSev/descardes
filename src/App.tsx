@@ -1,13 +1,15 @@
 import React from 'react';
-import GroupCards from './components/GroupCards';
-import Header from './components/Header';
+import { BrowserRouter } from 'react-router-dom';
+import { CardsProvider } from './store/CardsContext';
+import Routes from './router/index.routes';
 
 const App: React.FC = () => {
   return (
-    <>
-      <Header />
-      <GroupCards />
-    </>
+    <CardsProvider>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
+    </CardsProvider>
   );
 };
 

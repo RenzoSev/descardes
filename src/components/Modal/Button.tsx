@@ -11,20 +11,18 @@ const Button: React.FC<ButtonProps> = ({ buttonTitle, typeIcon, ...rest }) => {
     check: AiFillCheckCircle,
     close: AiFillCloseCircle,
   };
-
-  const colors = {
-    check: 'green',
-    close: 'red',
+  const classNames = {
+    check:
+      'flex items-center justify-center gap-1 rounded-2xl border border-green-700 py-2 px-4 font-bold uppercase text-green-700 text-slate-100 transition-all disabled:opacity-50',
+    close:
+      'flex items-center justify-center gap-1 rounded-2xl border border-red-700 py-2 px-4 font-bold uppercase text-red-700 text-slate-100 transition-all disabled:opacity-50',
   };
 
   const IconByType = icons[typeIcon];
-  const colorByType = colors[typeIcon];
+  const classNameByType = classNames[typeIcon];
 
   return (
-    <button
-      className={`flex items-center justify-center gap-1 rounded-2xl border border-${colorByType}-700 py-2 px-4 font-bold uppercase text-${colorByType}-700 text-slate-100 transition-all disabled:opacity-50`}
-      {...rest}
-    >
+    <button className={classNameByType} {...rest}>
       <IconByType />
       {buttonTitle}
     </button>

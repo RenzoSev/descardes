@@ -7,11 +7,11 @@ interface GridButton extends HTMLAttributes<HTMLButtonElement> {
 }
 
 const GridButton: React.FC<GridButton> = ({ type, onClick, ...rest }) => {
-  const colors = {
-    delete: 'red',
-    edit: 'blue',
+  const classNames = {
+    delete: 'relative right-8 z-50 text-lg text-red-700',
+    edit: 'relative right-8 z-50 text-lg text-blue-700',
   };
-  const colorByType = colors[type];
+  const classNameByType = classNames[type];
 
   const icons = {
     delete: AiFillDelete,
@@ -22,7 +22,7 @@ const GridButton: React.FC<GridButton> = ({ type, onClick, ...rest }) => {
   return (
     <button
       {...rest}
-      className={`relative right-8 z-50 text-lg text-${colorByType}-700`}
+      className={classNameByType}
       onClick={(e) => withoutParentsActionPropagation(e, onClick)}
     >
       <IconByType />

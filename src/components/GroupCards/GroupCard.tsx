@@ -1,16 +1,12 @@
 import React, { useCallback, useRef } from 'react';
 import useCardsContext from '../../hooks/useCardsContext';
 import { GroupCard as GroupCardTypes } from '../../types/Cards';
-import {
-  AiFillEdit,
-  AiFillDelete,
-  AiFillCheckCircle,
-  AiFillCloseCircle,
-} from 'react-icons/ai';
-import Modal, { ModalHandles } from '../Modal';
+import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
+import * as Modal from '../Modal';
 import useGroupCardsManager from '../../hooks/useGroupCardsManager';
 import { useNavigate } from 'react-router-dom';
 import Grid from '../Grid';
+import withoutParentsActionPropagation from '../../utils/withoutParentsActionPropagation';
 
 const GroupCard: React.FC<GroupCardTypes> = ({
   title,
@@ -27,7 +23,7 @@ const GroupCard: React.FC<GroupCardTypes> = ({
     description: descriptionToEdit,
     setDescription,
   } = useGroupCardsManager();
-  const modalRef = useRef<ModalHandles>(null);
+  const modalRef = useRef<Modal.ModalHandles>(null);
   const navigate = useNavigate();
 
   const handleNavigateToGroupCardPage = useCallback(() => {
@@ -61,70 +57,64 @@ const GroupCard: React.FC<GroupCardTypes> = ({
     modalRef.current?.toggleModal();
   }
 
+  function handleTitle(e: React.ChangeEvent<HTMLInputElement>) {
+    setTitle(e.target.value);
+  }
+
+  function handleDescription(e: React.ChangeEvent<HTMLInputElement>) {
+    setDescription(e.target.value);
+  }
+
   function renderModalEditGroupCard() {
     function renderTitle() {
-      return (
-        <span className="text-2xl font-bold uppercase text-blue-400">
-          Editar grupo de cards:
-        </span>
-      );
+      return <Modal.Title title="Editar grupo de cards:" />;
     }
 
     function renderInputs() {
       return (
-        <div className="flex flex-col gap-2">
-          <label className="flex flex-col gap-1 rounded">
-            Título:
-            <input
-              onChange={(e) => setTitle(e.target.value)}
-              className="rounded-lg	border border-blue-200 py-1 px-2 outline-none transition-all focus:border-blue-400"
-              maxLength={20}
-              placeholder={title}
-            />
-          </label>
+        <Modal.ContainerInputs>
+          <Modal.Input
+            onChange={handleTitle}
+            colorStyle="blue"
+            placeholder={title}
+            labelTitle="Título:"
+          />
 
-          <label className="flex flex-col gap-1 rounded">
-            Descrição:
-            <input
-              onChange={(e) => setDescription(e.target.value)}
-              className="rounded-lg	border border-blue-200 py-1 px-2 outline-none transition-all focus:border-blue-400"
-              placeholder={description}
-              maxLength={20}
-            />
-          </label>
-        </div>
+          <Modal.Input
+            onChange={handleDescription}
+            colorStyle="blue"
+            placeholder={description}
+            labelTitle="Descrição:"
+          />
+        </Modal.ContainerInputs>
       );
     }
 
     function renderButtons() {
       return (
-        <div className="flex flex-col gap-2">
-          <button
-            onClick={handleEditGroupCard}
+        <Modal.ContainerButton>
+          <Modal.Button
+            buttonTitle="Editar!"
+            typeIcon="check"
             disabled={!titleToEdit && !descriptionToEdit}
-            className="flex items-center justify-center gap-1 rounded-2xl border border-blue-700 py-2 px-4 font-bold uppercase text-blue-700 text-slate-100 transition-all disabled:opacity-50"
-          >
-            <AiFillCheckCircle />
-            Editar!
-          </button>
+            onClick={handleEditGroupCard}
+          />
 
-          <button
+          <Modal.Button
+            buttonTitle="Fechar!"
+            typeIcon="close"
             onClick={handleToggleEditGroupCard}
-            className='transition-all" flex items-center justify-center gap-1 rounded-2xl border border-red-700 py-2 px-4 font-bold uppercase text-red-700 text-slate-100'
-          >
-            <AiFillCloseCircle />
-            Fechar!
-          </button>
-        </div>
+          />
+        </Modal.ContainerButton>
       );
     }
 
     return (
-      <Modal ref={modalRef}>
+      <Modal.Container ref={modalRef}>
         {renderTitle()}
         {renderInputs()}
         {renderButtons()}
-      </Modal>
+      </Modal.Container>
     );
   }
 

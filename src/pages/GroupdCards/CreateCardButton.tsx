@@ -1,10 +1,10 @@
 import React, { useRef, useCallback } from 'react';
 import useCardsContext from '../../hooks/useCardsContext';
-import * as Modal from '../Modal/index';
+import * as Modal from '../../components/Modal';
 import useGroupCardsManager from '../../hooks/useGroupCardsManager';
-import FixedButton from '../FixedButton';
+import FixedButton from '../../components/FixedButton';
 
-const CreateGroupCardButton: React.FC = () => {
+const CreateCardButton: React.FC = () => {
   const modalRef = useRef<Modal.ModalHandles>(null);
   const { title, setTitle, description, setDescription } =
     useGroupCardsManager();
@@ -38,31 +38,26 @@ const CreateGroupCardButton: React.FC = () => {
   }
 
   function renderModalCreateCard() {
-    function renderTitle() {
-      return <Modal.Title title="Criar grupo de cards:" />;
-    }
+    return (
+      <Modal.Container ref={modalRef}>
+        <Modal.Title title="Criar card:" />
 
-    function renderInputs() {
-      return (
         <Modal.ContainerInputs>
           <Modal.Input
             onChange={handleTitle}
             colorStyle="blue"
+            placeholder={title}
             labelTitle="Título:"
           />
 
           <Modal.Input
             onChange={handleDescription}
             colorStyle="blue"
-            placeholder={'Este campo é opcional.'}
+            placeholder={description}
             labelTitle="Descrição:"
           />
         </Modal.ContainerInputs>
-      );
-    }
 
-    function renderButtons() {
-      return (
         <Modal.ContainerButton>
           <Modal.Button
             buttonTitle="Feito!"
@@ -77,14 +72,6 @@ const CreateGroupCardButton: React.FC = () => {
             onClick={handleShowModalGroupCard}
           />
         </Modal.ContainerButton>
-      );
-    }
-
-    return (
-      <Modal.Container ref={modalRef}>
-        {renderTitle()}
-        {renderInputs()}
-        {renderButtons()}
       </Modal.Container>
     );
   }
@@ -92,7 +79,7 @@ const CreateGroupCardButton: React.FC = () => {
   return (
     <FixedButton
       type="add"
-      title="Criar grupo de card"
+      title="Criar card"
       onClick={handleShowModalGroupCard}
     >
       {renderModalCreateCard()}
@@ -100,4 +87,4 @@ const CreateGroupCardButton: React.FC = () => {
   );
 };
 
-export default CreateGroupCardButton;
+export default CreateCardButton;

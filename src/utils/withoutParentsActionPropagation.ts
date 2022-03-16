@@ -1,9 +1,10 @@
 function withoutParentsActionPropagation(
-  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  e: React.MouseEvent<HTMLElement, MouseEvent>,
   onClick?: (...rest: any) => void
 ) {
-  if (!onClick) return;
   e.stopPropagation();
+
+  if (!onClick) return;
   onClick(e);
 }
 

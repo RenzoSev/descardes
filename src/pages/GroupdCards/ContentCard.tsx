@@ -1,11 +1,13 @@
+// TODO: CreateCardButton and EditButton form here has almost the same logic.
 import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Modal from '../../components/Modal';
 import Grid from '../../components/Grid/index';
 import useCardManager from '../../hooks/useCardManager';
 import useCardsContext from '../../hooks/useCardsContext';
-import { BaseCard, CardTypes } from '../../types/Cards';
+import { BaseCard, Card, CardTypes } from '../../types/Cards';
 import { parseType } from '../../utils/parsers';
+import getId from '../../utils/getId';
 
 interface ContentCardProps extends BaseCard {
   groupId: number;
@@ -21,6 +23,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   content,
 }) => {
   const modalRef = useRef<Modal.ModalHandles>(null);
+  const modalChooseCardRef = useRef<Modal.ModalHandles>(null);
   const navigate = useNavigate();
   const {
     group: { groupCards, setGroupCards },
@@ -30,15 +33,27 @@ const ContentCard: React.FC<ContentCardProps> = ({
     question: questionToEdit,
     title: titleToEdit,
     type: typeToEdit,
+    contentOption1,
+    contentOption2,
     setAnswer,
     setQuestion,
     setTitle,
     setType,
+    setContentOption1,
+    setContentOption2,
   } = useCardManager();
 
   const handleNavigateToCardPage = useCallback(() => {
     navigate(`/${id}`);
   }, []);
+
+  function handleToggleModalChooseCard() {
+    modalChooseCardRef.current?.toggleModal();
+  }
+
+  function handleToggleModalEditCard() {
+    modalRef.current?.toggleModal();
+  }
 
   function handleRemoveCard() {
     const cleanedGroupCards = groupCards.map((groupCard) => {
@@ -55,22 +70,51 @@ const ContentCard: React.FC<ContentCardProps> = ({
     setGroupCards(cleanedGroupCards);
   }
 
-  function handleToggleModalEditCard() {
-    modalRef.current?.toggleModal();
-  }
-
   function handleEditCard() {
-    const newGroupCards = groupCards.map((groupCard) => {
-      if (groupCard.id !== groupId) return groupCard;
+    if (typeToEdit === 'choose' && (!contentOption1 || !contentOption2)) {
+      modalRef.current?.toggleModal();
+      modalChooseCardRef.current?.toggleModal();
+      return;
+    }
 
-      const editedCard = {
+    function parseCardWithContent() {
+      const content = {
+        options: [{ title: contentOption1 }, { title: contentOption2 }],
+      };
+
+      return {
         id,
         title: titleToEdit || title,
         question: questionToEdit || question,
         type: typeToEdit || type,
         answer: answerToEdit || answer,
-        content: content,
+        content,
       };
+    }
+
+    function parseCardWithoutContent() {
+      return {
+        id,
+        title: titleToEdit || title,
+        question: questionToEdit || question,
+        type: typeToEdit || type,
+        answer: answerToEdit || answer,
+        content: {},
+      };
+    }
+
+    function parseEditCard() {
+      if (contentOption1 && contentOption2) {
+        return parseCardWithContent() as Card;
+      }
+
+      return parseCardWithoutContent() as Card;
+    }
+
+    const newGroupCards = groupCards.map((groupCard) => {
+      if (groupCard.id !== groupId) return groupCard;
+
+      const editedCard = parseEditCard();
 
       const editedGroupCard = {
         ...groupCard,
@@ -85,6 +129,14 @@ const ContentCard: React.FC<ContentCardProps> = ({
     });
 
     setGroupCards(newGroupCards);
+
+    if (contentOption1 && contentOption2) {
+      setContentOption1('');
+      setContentOption2('');
+      modalChooseCardRef.current?.toggleModal();
+      return;
+    }
+
     modalRef.current?.toggleModal();
   }
 
@@ -101,7 +153,15 @@ const ContentCard: React.FC<ContentCardProps> = ({
   }
 
   function handleTypeCard(e: React.ChangeEvent<HTMLInputElement>) {
-    setType(e.target.value as CardTypes);
+    setType(e.target.id as CardTypes);
+  }
+
+  function handleContentOption1(e: React.ChangeEvent<HTMLInputElement>) {
+    setContentOption1(e.target.value as CardTypes);
+  }
+
+  function handleContentOption2(e: React.ChangeEvent<HTMLInputElement>) {
+    setContentOption2(e.target.value as CardTypes);
   }
 
   function renderModalEditCard() {
@@ -110,8 +170,6 @@ const ContentCard: React.FC<ContentCardProps> = ({
     }
 
     function renderInputs() {
-      const typeParsed = parseType(type);
-
       return (
         <Modal.ContainerInputs>
           <Modal.Input
@@ -134,17 +192,36 @@ const ContentCard: React.FC<ContentCardProps> = ({
             placeholder={answer}
             labelTitle="Resposta:"
           />
-
-          <Modal.Input
-            onChange={handleTypeCard}
-            colorStyle="blue"
-            placeholder={typeParsed.replace(
-              typeParsed[0],
-              typeParsed[0].toUpperCase()
-            )}
-            labelTitle="Tipo de card:"
-          />
         </Modal.ContainerInputs>
+      );
+    }
+
+    function renderRadios() {
+      const RADIO_NAME = 'card-type';
+
+      return (
+        <Modal.ContainerRadio labelTitle="Qual o tipo de card?">
+          <Modal.Radio
+            id={'essay'}
+            labelTitle={'Dissertativo'}
+            name={RADIO_NAME}
+            onChange={handleTypeCard}
+          />
+
+          <Modal.Radio
+            id={'side'}
+            labelTitle={'Frente e verso'}
+            name={RADIO_NAME}
+            onChange={handleTypeCard}
+          />
+
+          <Modal.Radio
+            id={'choose'}
+            labelTitle={'Múltipla Escolha'}
+            name={RADIO_NAME}
+            onChange={handleTypeCard}
+          />
+        </Modal.ContainerRadio>
       );
     }
 
@@ -178,6 +255,68 @@ const ContentCard: React.FC<ContentCardProps> = ({
       <Modal.Container ref={modalRef} positionDimension="top-20 xs:top-44">
         {renderTitle()}
         {renderInputs()}
+        {renderRadios()}
+        {renderButtons()}
+      </Modal.Container>
+    );
+  }
+
+  function renderModalEditChooseCard() {
+    function renderTitle() {
+      return <Modal.Title title="Múltipla escolha:" />;
+    }
+
+    function renderSubtitle() {
+      return (
+        <Modal.Subtitle subtitle="Essas são as outras opções que aparecerão como possíveis escolhas." />
+      );
+    }
+
+    function renderInputs() {
+      return (
+        <Modal.ContainerInputs>
+          <Modal.Input
+            onChange={handleContentOption1}
+            colorStyle="blue"
+            labelTitle="Opção 1:"
+            maxLength={40}
+          />
+
+          <Modal.Input
+            onChange={handleContentOption2}
+            colorStyle="blue"
+            labelTitle="Opção 2:"
+          />
+        </Modal.ContainerInputs>
+      );
+    }
+
+    function renderButtons() {
+      return (
+        <Modal.ContainerButton>
+          <Modal.Button
+            buttonTitle="Feito!"
+            typeIcon="check"
+            disabled={!contentOption1 || !contentOption2}
+            onClick={handleEditCard}
+          />
+
+          <Modal.Button
+            buttonTitle="Fechar!"
+            typeIcon="close"
+            onClick={handleToggleModalChooseCard}
+          />
+        </Modal.ContainerButton>
+      );
+    }
+
+    return (
+      <Modal.Container ref={modalChooseCardRef}>
+        <div className="flex flex-col gap-1">
+          {renderTitle()}
+          {renderSubtitle()}
+        </div>
+        {renderInputs()}
         {renderButtons()}
       </Modal.Container>
     );
@@ -199,6 +338,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
       <Grid.Details details={parseType(type)} styles="uppercase" />
 
       {renderModalEditCard()}
+      {renderModalEditChooseCard()}
     </Grid.Container>
   );
 };

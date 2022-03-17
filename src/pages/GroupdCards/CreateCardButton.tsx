@@ -3,14 +3,12 @@ import useCardsContext from '../../hooks/useCardsContext';
 import * as Modal from '../../components/Modal';
 import FixedButton from '../../components/FixedButton';
 import useCardManager from '../../hooks/useCardManager';
-import { CardTypes, ChooseCard, EssayCard, SideCard } from '../../types/Cards';
+import { Card, CardTypes, ChooseCard, EssayCard, SideCard } from '../../types/Cards';
 import getId from '../../utils/getId';
 
 interface CreateCardButtonProps {
   groupCardId: number;
 }
-
-type NewCard = ChooseCard | EssayCard | SideCard;
 
 const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
   const modalRef = useRef<Modal.ModalHandles>(null);
@@ -68,10 +66,10 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
 
     function parseNewCard() {
       if (contentOption1 && contentOption2) {
-        return parseCardWithContent() as NewCard;
+        return parseCardWithContent() as Card;
       }
 
-      return parseCardWithoutContent() as NewCard;
+      return parseCardWithoutContent() as Card;
     }
 
     const newGroupCards = groupCards.map((groupCard) => {
@@ -86,16 +84,22 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     });
 
     setGroupCards(newGroupCards);
-    setContentOption1('');
-    setContentOption2('');
-    modalChooseCardRef.current?.toggleModal();
+
+    if (contentOption1 && contentOption2) {
+      setContentOption1('');
+      setContentOption2('');
+      modalChooseCardRef.current?.toggleModal();
+      return;
+    }
+
+    modalRef.current?.toggleModal();
   }
 
-  const handleShowModalGroupCard = useCallback(() => {
+  const handleToggleModalGroupCard = useCallback(() => {
     modalRef.current?.toggleModal();
   }, []);
 
-  const handleShownModalChooseCard = useCallback(() => {
+  const handleToggleModalChooseCard = useCallback(() => {
     modalChooseCardRef.current?.toggleModal();
   }, []);
 
@@ -201,7 +205,7 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
           <Modal.Button
             buttonTitle="Fechar!"
             typeIcon="close"
-            onClick={handleShowModalGroupCard}
+            onClick={handleToggleModalGroupCard}
           />
         </Modal.ContainerButton>
       );
@@ -260,7 +264,7 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
           <Modal.Button
             buttonTitle="Fechar!"
             typeIcon="close"
-            onClick={handleShownModalChooseCard}
+            onClick={handleToggleModalChooseCard}
           />
         </Modal.ContainerButton>
       );
@@ -282,7 +286,7 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     <FixedButton
       type="add"
       title="Criar card"
-      onClick={handleShowModalGroupCard}
+      onClick={handleToggleModalGroupCard}
     >
       {renderModalCreateCard()}
       {renderModalCreateChooseCard()}

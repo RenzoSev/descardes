@@ -6,9 +6,8 @@ function useCardManager() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [type, setType] = useState<CardTypes>('' as CardTypes);
-  const [content, setContent] = useState<ContentChooseCard>(
-    {} as ContentChooseCard
-  );
+  const [contentOption1, setContentOption1] = useState('');
+  const [contentOption2, setContentOption2] = useState('');
 
   return {
     title,
@@ -19,8 +18,10 @@ function useCardManager() {
     setAnswer,
     type,
     setType,
-    content,
-    setContent,
+    contentOption1,
+    setContentOption1,
+    contentOption2,
+    setContentOption2,
   };
 }
 

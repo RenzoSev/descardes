@@ -3,6 +3,7 @@ import useCardsContext from '../../hooks/useCardsContext';
 import * as Modal from '../Modal/index';
 import useGroupCardsManager from '../../hooks/useGroupCardsManager';
 import FixedButton from '../FixedButton';
+import getId from '../../utils/getId';
 
 const CreateGroupCardButton: React.FC = () => {
   const modalRef = useRef<Modal.ModalHandles>(null);
@@ -14,7 +15,7 @@ const CreateGroupCardButton: React.FC = () => {
 
   const handleCreateGroupCard = () => {
     const newGroupCard = {
-      id: new Date().getTime(),
+      id: getId(),
       title,
       description,
       cards: [],

@@ -18,7 +18,7 @@ export interface EssayCard extends BaseCard {
 }
 
 export interface ContentChooseCard {
-  options: { title: string; isAnswer: true }[];
+  options: { title: string }[];
 }
 export interface ChooseCard extends BaseCard {
   type: 'choose';

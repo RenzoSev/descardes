@@ -4,11 +4,12 @@ import withoutParentsActionPropagation from '../../utils/withoutParentsActionPro
 
 interface ModalProps {
   initialStatus?: boolean;
+  positionDimension?: string;
   children: any; // TODO: it must not be resolved with any type. fix this type bug when pass a children to Modal
 }
 
 const Modal: React.ForwardRefRenderFunction<ModalHandles, ModalProps> = (
-  { children, initialStatus = false },
+  { children, initialStatus = false, positionDimension },
   ref
 ) => {
   const [showModal, setShowModal] = useState(initialStatus);
@@ -27,9 +28,15 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, ModalProps> = (
   }
 
   function renderModal() {
+    const BASE_CLASS_NAME = 'fixed left-0 right-0	z-50 flex justify-center';
+    const TOP_DEFAULT_DIMENSION = 'top-1/4';
+    const TOP_DIMENSION = positionDimension || TOP_DEFAULT_DIMENSION;
+
+    const containerModalClassName = BASE_CLASS_NAME + " " + TOP_DIMENSION;
+
     return (
       <div
-        className="fixed top-1/4 left-0 right-0	z-50 flex justify-center"
+        className={containerModalClassName}
         onClick={(e) => withoutParentsActionPropagation(e)}
       >
         <div className="flex w-86 flex-col gap-8 rounded-lg bg-slate-100 p-6 shadow">

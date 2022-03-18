@@ -7,7 +7,6 @@ import useCardManager from '../../hooks/useCardManager';
 import useCardsContext from '../../hooks/useCardsContext';
 import { BaseCard, Card, CardTypes } from '../../types/Cards';
 import { parseType } from '../../utils/parsers';
-import getId from '../../utils/getId';
 
 interface ContentCardProps extends BaseCard {
   groupId: number;
@@ -20,7 +19,6 @@ const ContentCard: React.FC<ContentCardProps> = ({
   question,
   type,
   groupId,
-  content,
 }) => {
   const modalRef = useRef<Modal.ModalHandles>(null);
   const modalChooseCardRef = useRef<Modal.ModalHandles>(null);
@@ -44,7 +42,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   } = useCardManager();
 
   const handleNavigateToCardPage = useCallback(() => {
-    navigate(`/${id}`);
+    navigate(`/${groupId}/${id}`);
   }, []);
 
   function handleToggleModalChooseCard() {

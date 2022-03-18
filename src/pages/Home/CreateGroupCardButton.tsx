@@ -1,8 +1,8 @@
 import React, { useRef, useCallback } from 'react';
 import useCardsContext from '../../hooks/useCardsContext';
-import * as Modal from '../Modal/index';
+import * as Modal from '../../components/Modal/index';
 import useGroupCardsManager from '../../hooks/useGroupCardsManager';
-import FixedButton from '../FixedButton';
+import FixedButton from '../../components/FixedButton';
 import getId from '../../utils/getId';
 
 const CreateGroupCardButton: React.FC = () => {

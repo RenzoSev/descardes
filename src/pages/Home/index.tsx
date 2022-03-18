@@ -1,8 +1,9 @@
 import React from 'react';
 import useCardsContext from '../../hooks/useCardsContext';
-import MainContainer from '../Container';
-import Grid from '../Grid';
-import Subtitle from '../Subtitle';
+import MainContainer from '../../components/Container';
+import Grid from '../../components/Grid';
+import Header from '../../components/Header';
+import Subtitle from '../../components/Subtitle';
 import CreateGroupCardButton from './CreateGroupCardButton';
 import GroupCard from './GroupCard';
 
@@ -22,11 +23,15 @@ const GroupCards: React.FC = () => {
   }
 
   return (
-    <MainContainer>
-      <Subtitle subtitle={'Grupo de cards'} />
-      {renderGroupCards()}
-      <CreateGroupCardButton />
-    </MainContainer>
+    <>
+      <Header title="Descardes" />
+
+      <MainContainer>
+        <Subtitle subtitle={'Grupo de cards'} />
+        {renderGroupCards()}
+        <CreateGroupCardButton />
+      </MainContainer>
+    </>
   );
 };
 

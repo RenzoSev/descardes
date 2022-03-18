@@ -2,10 +2,10 @@ import React, { useCallback, useRef } from 'react';
 import useCardsContext from '../../hooks/useCardsContext';
 import { GroupCard as GroupCardTypes } from '../../types/Cards';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
-import * as Modal from '../Modal';
+import * as Modal from '../../components/Modal';
 import useGroupCardsManager from '../../hooks/useGroupCardsManager';
 import { useNavigate } from 'react-router-dom';
-import Grid from '../Grid';
+import Grid from '../../components/Grid';
 import withoutParentsActionPropagation from '../../utils/withoutParentsActionPropagation';
 
 const GroupCard: React.FC<GroupCardTypes> = ({

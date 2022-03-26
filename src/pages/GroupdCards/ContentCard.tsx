@@ -41,16 +41,27 @@ const ContentCard: React.FC<ContentCardProps> = ({
     setContentOption2,
   } = useCardManager();
 
+  const resetStates = () => {
+    setAnswer('');
+    setQuestion('');
+    setTitle('');
+    setType('essay');
+    setContentOption1('');
+    setContentOption2('');
+  };
+
   const handleNavigateToCardPage = useCallback(() => {
     navigate(`/${groupId}/${id}`);
   }, []);
 
   function handleToggleModalChooseCard() {
     modalChooseCardRef.current?.toggleModal();
+    resetStates();
   }
 
   function handleToggleModalEditCard() {
     modalRef.current?.toggleModal();
+    resetStates();
   }
 
   function handleRemoveCard() {
@@ -72,6 +83,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
     if (typeToEdit === 'choose' && (!contentOption1 || !contentOption2)) {
       modalRef.current?.toggleModal();
       modalChooseCardRef.current?.toggleModal();
+      resetStates();
       return;
     }
 
@@ -182,6 +194,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
             colorStyle="blue"
             placeholder={question}
             labelTitle="Questão:"
+            maxLength={40}
           />
 
           <Modal.Input
@@ -189,6 +202,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
             colorStyle="blue"
             placeholder={answer}
             labelTitle="Resposta:"
+            maxLength={80}
           />
         </Modal.ContainerInputs>
       );
@@ -309,7 +323,10 @@ const ContentCard: React.FC<ContentCardProps> = ({
     }
 
     return (
-      <Modal.Container ref={modalChooseCardRef}>
+      <Modal.Container
+        ref={modalChooseCardRef}
+        onToggleModal={() => resetStates()}
+      >
         <div className="flex flex-col gap-1">
           {renderTitle()}
           {renderSubtitle()}

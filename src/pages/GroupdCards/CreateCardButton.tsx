@@ -3,7 +3,7 @@ import useCardsContext from '../../hooks/useCardsContext';
 import * as Modal from '../../components/Modal';
 import FixedButton from '../../components/FixedButton';
 import useCardManager from '../../hooks/useCardManager';
-import { Card, CardTypes, ChooseCard, EssayCard, SideCard } from '../../types/Cards';
+import { Card, CardTypes } from '../../types/Cards';
 import getId from '../../utils/getId';
 
 interface CreateCardButtonProps {
@@ -15,15 +15,15 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
   const modalChooseCardRef = useRef<Modal.ModalHandles>(null);
   const {
     title,
-    setTitle,
     answer,
-    setAnswer,
     question,
     contentOption1,
     contentOption2,
-    setQuestion,
     type,
+    setTitle,
     setType,
+    setAnswer,
+    setQuestion,
     setContentOption1,
     setContentOption2,
   } = useCardManager();
@@ -31,10 +31,20 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     group: { groupCards, setGroupCards },
   } = useCardsContext();
 
+  const resetStates = () => {
+    setTitle('');
+    setType('essay');
+    setAnswer('');
+    setQuestion('');
+    setContentOption1('');
+    setContentOption2('');
+  };
+
   function handleCreateCard() {
     if (type === 'choose' && (!contentOption1 || !contentOption2)) {
       modalRef.current?.toggleModal();
       modalChooseCardRef.current?.toggleModal();
+      resetStates();
       return;
     }
 
@@ -93,14 +103,17 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     }
 
     modalRef.current?.toggleModal();
+    resetStates();
   }
 
   const handleToggleModalGroupCard = useCallback(() => {
     modalRef.current?.toggleModal();
+    resetStates();
   }, []);
 
   const handleToggleModalChooseCard = useCallback(() => {
     modalChooseCardRef.current?.toggleModal();
+    resetStates();
   }, []);
 
   function handleTitle(e: React.ChangeEvent<HTMLInputElement>) {
@@ -158,6 +171,7 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
             colorStyle="blue"
             placeholder={'ex: 4'}
             labelTitle="Resposta:"
+            maxLength={80}
           />
         </Modal.ContainerInputs>
       );
@@ -271,7 +285,10 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     }
 
     return (
-      <Modal.Container ref={modalChooseCardRef}>
+      <Modal.Container
+        ref={modalChooseCardRef}
+        onToggleModal={() => resetStates()}
+      >
         <div className="flex flex-col gap-1">
           {renderTitle()}
           {renderSubtitle()}

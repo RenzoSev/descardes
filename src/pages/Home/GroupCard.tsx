@@ -26,6 +26,11 @@ const GroupCard: React.FC<GroupCardTypes> = ({
   const modalRef = useRef<Modal.ModalHandles>(null);
   const navigate = useNavigate();
 
+  const resetStates = () => {
+    setTitle('');
+    setDescription('');
+  };
+
   const handleNavigateToGroupCardPage = useCallback(() => {
     navigate(`/${id}`);
   }, []);
@@ -40,6 +45,7 @@ const GroupCard: React.FC<GroupCardTypes> = ({
 
   function handleToggleEditGroupCard() {
     modalRef.current?.toggleModal();
+    resetStates();
   }
 
   function handleEditGroupCard() {
@@ -55,6 +61,7 @@ const GroupCard: React.FC<GroupCardTypes> = ({
 
     setGroupCards(newGroupCards);
     modalRef.current?.toggleModal();
+    resetStates();
   }
 
   function handleTitle(e: React.ChangeEvent<HTMLInputElement>) {
@@ -110,7 +117,7 @@ const GroupCard: React.FC<GroupCardTypes> = ({
     }
 
     return (
-      <Modal.Container ref={modalRef}>
+      <Modal.Container ref={modalRef} onToggleModal={() => resetStates()}>
         {renderTitle()}
         {renderInputs()}
         {renderButtons()}

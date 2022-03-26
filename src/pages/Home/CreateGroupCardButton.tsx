@@ -13,6 +13,11 @@ const CreateGroupCardButton: React.FC = () => {
     group: { groupCards, setGroupCards },
   } = useCardsContext();
 
+  const resetStates = () => {
+    setTitle('');
+    setDescription('');
+  };
+
   const handleCreateGroupCard = () => {
     const newGroupCard = {
       id: getId(),
@@ -24,10 +29,12 @@ const CreateGroupCardButton: React.FC = () => {
 
     setGroupCards(newGroupCards);
     modalRef.current?.toggleModal();
+    resetStates();
   };
 
   const handleShowModalGroupCard = useCallback(() => {
     modalRef.current?.toggleModal();
+    resetStates();
   }, []);
 
   function handleTitle(e: React.ChangeEvent<HTMLInputElement>) {
@@ -82,7 +89,7 @@ const CreateGroupCardButton: React.FC = () => {
     }
 
     return (
-      <Modal.Container ref={modalRef}>
+      <Modal.Container ref={modalRef} onToggleModal={() => resetStates()}>
         {renderTitle()}
         {renderInputs()}
         {renderButtons()}

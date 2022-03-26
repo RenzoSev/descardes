@@ -26,7 +26,7 @@ const FixedButton: React.FC<FixedButtonProps> = ({
         {...rest}
       >
         <IconByType />
-        {title}
+        <p className='mt-0.5'>{title}</p>
       </button>
     </div>
   );

@@ -16,7 +16,9 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, centerTitle }) => {
   return (
     <section className="w-full rounded-b-sm bg-blue-500">
       <header className={HEADER_CLASS_NAME}>
-        <h1 className="text-3xl font-bold text-slate-100">{title}</h1>
+        <h1 className="text-3xl font-bold tracking-wide text-slate-100">
+          {title}
+        </h1>
         {subtitle && (
           <h2 className="text-lg font-bold text-slate-100">{subtitle}</h2>
         )}

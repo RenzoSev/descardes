@@ -6,15 +6,17 @@ interface ModalProps {
   initialStatus?: boolean;
   positionDimension?: string;
   children: any; // TODO: it must not be resolved with any type. fix this type bug when pass a children to Modal
+  onToggleModal?: () => void;
 }
 
 const Modal: React.ForwardRefRenderFunction<ModalHandles, ModalProps> = (
-  { children, initialStatus = false, positionDimension },
+  { children, initialStatus = false, positionDimension, onToggleModal },
   ref
 ) => {
   const [showModal, setShowModal] = useState(initialStatus);
 
   function toggleModal() {
+    if (onToggleModal) onToggleModal();
     setShowModal(!showModal);
   }
 
@@ -32,7 +34,7 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, ModalProps> = (
     const TOP_DEFAULT_DIMENSION = 'top-1/4';
     const TOP_DIMENSION = positionDimension || TOP_DEFAULT_DIMENSION;
 
-    const containerModalClassName = BASE_CLASS_NAME + " " + TOP_DIMENSION;
+    const containerModalClassName = BASE_CLASS_NAME + ' ' + TOP_DIMENSION;
 
     return (
       <div

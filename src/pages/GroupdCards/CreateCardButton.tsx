@@ -31,7 +31,14 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     group: { groupCards, setGroupCards },
   } = useCardsContext();
 
+  const MODAL_CHOOSE_CARD_IS_RUNNING =
+    type === 'choose' && (!contentOption1 || !contentOption2);
+
   const resetStates = () => {
+    if (MODAL_CHOOSE_CARD_IS_RUNNING) {
+      return;
+    }
+
     setTitle('');
     setType('essay');
     setAnswer('');
@@ -41,7 +48,7 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
   };
 
   function handleCreateCard() {
-    if (type === 'choose' && (!contentOption1 || !contentOption2)) {
+    if (MODAL_CHOOSE_CARD_IS_RUNNING) {
       modalRef.current?.toggleModal();
       modalChooseCardRef.current?.toggleModal();
       return;

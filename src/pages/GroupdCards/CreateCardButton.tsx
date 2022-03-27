@@ -44,7 +44,6 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     if (type === 'choose' && (!contentOption1 || !contentOption2)) {
       modalRef.current?.toggleModal();
       modalChooseCardRef.current?.toggleModal();
-      resetStates();
       return;
     }
 

@@ -226,7 +226,7 @@ const CreateCardButton: React.FC<CreateCardButtonProps> = ({ groupCardId }) => {
     }
 
     return (
-      <Modal.Container ref={modalRef} positionDimension="top-12 xs:top-36">
+      <Modal.Container ref={modalRef} positionDimension="top-28 xs:top-36">
         {renderTitle()}
         {renderInputs()}
         {renderRadios()}

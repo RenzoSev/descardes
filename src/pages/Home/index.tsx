@@ -24,7 +24,7 @@ const GroupCards: React.FC = () => {
 
   return (
     <>
-      <Header title="Descardes" />
+      <Header title="Descardes" blockBackNavigate/>
 
       <MainContainer>
         <Subtitle subtitle={'Grupo de cards'} />

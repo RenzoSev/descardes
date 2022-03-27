@@ -5,9 +5,15 @@ interface HeaderProps {
   title: string;
   subtitle?: string;
   centerTitle?: boolean;
+  blockBackNavigate?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, subtitle, centerTitle }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  subtitle,
+  centerTitle,
+  blockBackNavigate,
+}) => {
   const navigate = useNavigate();
 
   const BASE_HEADER_CLASS_NAME = 'flex items-center px-4 py-2';
@@ -21,7 +27,13 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, centerTitle }) => {
       <header className={HEADER_CLASS_NAME}>
         <h1
           className="text-3xl font-bold tracking-wide text-slate-100"
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            if (blockBackNavigate) {
+              return;
+            }
+
+            navigate(-1);
+          }}
         >
           {title}
         </h1>

@@ -41,7 +41,14 @@ const ContentCard: React.FC<ContentCardProps> = ({
     setContentOption2,
   } = useCardManager();
 
+  const MODAL_CHOOSE_CARD_IS_RUNNING =
+    typeToEdit === 'choose' && (!contentOption1 || !contentOption2);
+
   const resetStates = () => {
+    if (MODAL_CHOOSE_CARD_IS_RUNNING) {
+      return;
+    }
+
     setAnswer('');
     setQuestion('');
     setTitle('');
@@ -80,7 +87,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   }
 
   function handleEditCard() {
-    if (typeToEdit === 'choose' && (!contentOption1 || !contentOption2)) {
+    if (MODAL_CHOOSE_CARD_IS_RUNNING) {
       modalRef.current?.toggleModal();
       modalChooseCardRef.current?.toggleModal();
       resetStates();
